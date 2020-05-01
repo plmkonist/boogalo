@@ -13,7 +13,7 @@ class GameOver : AppCompatActivity() {
         setContentView(R.layout.activity_gameover)
         val score = intent.getIntExtra("finalScore", 0)
         val finals = findViewById<TextView>(R.id.scoreText)
-        finals.setText(score)
+        finals.text = score.toString()
         val playAgain = findViewById<Button>(R.id.playAgain)
         val main = Intent(this, Main2Activity::class.java)
         playAgain.setOnClickListener { startActivity(main) }

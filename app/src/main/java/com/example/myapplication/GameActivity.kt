@@ -14,11 +14,11 @@ import java.util.*
 
 
 class GameActivity : AppCompatActivity() {
-    private val ROW_SIZE = 5
+    private val ROW_SIZE = 6
     private val  COLUMN_SIZE = 5
     private var score = 0
-    private var gameStartTime: Long = 0
-    private var noteTimes: ArrayList<Long>? = null
+    //private var gameStartTime: Long = 0
+    //private var noteTimes: ArrayList<Long>? = null
     private val REVEAL_TIME = 1500L
     private var song2: MediaPlayer? = null
     //private boolean[] correctButtonClicked;
@@ -27,11 +27,11 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
         //val time = System.currentTimeMillis()
         val song = SongConstants.songArray[intent.getIntExtra("song",0)]
-        noteTimes = song.noteTimes
-        setupUI(song)
+        val noteTimes = song.noteTimes
+        setupUI(song, noteTimes)
     }
 
-    private fun setupUI(song: Song) {
+    private fun setupUI(song: Song, noteTimes: ArrayList<Long>) {
         val gameRowsAndColumns = findViewById<LinearLayout>(R.id.rowsAndColumns)
         val scoreText = findViewById<TextView>(R.id.sdf)
         scoreText.text = "Current song " + song.name
@@ -67,7 +67,7 @@ class GameActivity : AppCompatActivity() {
             gameRowsAndColumns.addView(gameBtnRow)
         }
         GlobalScope.launch {
-            startGame(buttonArray, buttonToClick,song)
+            startGame(buttonArray, buttonToClick,song, noteTimes)
         }
     }
 
@@ -85,9 +85,10 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun startGame(buttonArray: Array<Button?>, buttonToClick: Array<ScoreTracker?>, song: Song) {
+    private fun startGame(buttonArray: Array<Button?>, buttonToClick: Array<ScoreTracker?>, song: Song, noteTimes: ArrayList<Long>) {
         var gameIsRunning = true
         var gen = Random()
+        val r = findViewById<Button>(R.id.time)
         val randomButtonLocations = IntArray(buttonToClick.size)
         var x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
         randomButtonLocations[0] = x
@@ -106,39 +107,42 @@ class GameActivity : AppCompatActivity() {
             song2 = MediaPlayer.create(this@GameActivity, song.iD)
             song2?.start()
         }
-        gameStartTime = System.currentTimeMillis()
+        val gameStartTime = System.currentTimeMillis()
+        runBlocking {
+            for (i in buttonToClick.indices) {
+                launch(Dispatchers.Default) {
+                    buttonToClick[i] =
+                        ScoreTracker(buttonArray[randomButtonLocations[i]], gameStartTime + noteTimes[index++])
+                    val waitTime = buttonToClick[i]!!.time - System.currentTimeMillis()
+                    if (System.currentTimeMillis() < buttonToClick[i]!!.time)
+                            Thread.sleep(waitTime)
+                    buttonClickedCheck(buttonToClick, i)
+                }
+            }
+        }
         while (gameIsRunning) {
-            runBlocking {
                 for (g in buttonToClick.indices) {
-                        val coIndex = g
-                            if (buttonToClick[coIndex]!!.clicked || buttonToClick[i]?.time + REVEAL_TIME <= System.currentTimeMillis()) {
-                                launch {
-                                    x = genInt(gen, randomButtonLocations);
-                                    randomButtonLocations[index] = x;
+                    if (buttonToClick[g]!!.clicked || buttonToClick[g]!!.time + REVEAL_TIME <= System.currentTimeMillis()) {
+                                GlobalScope.launch(Dispatchers.Default) {
+                                    val x = genInt(randomButtonLocations);
+                                    randomButtonLocations[g] = x;
                                     //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
                                     //gen = Random(x.toLong())
-                                    buttonToClick[coIndex]?.reset(buttonArray[x], gameStartTime + noteTimes!![index++])
-                                    if (System.currentTimeMillis() <= buttonToClick[coIndex]!!.time) {
-                                        try {
-                                            buttonClickedCheck(buttonToClick, coIndex)
-                                        } catch (e: java.lang.Exception) {
-                                            buttonClickedCheck(buttonToClick, coIndex)
-                                        }
+                                    buttonToClick[g]?.reset(buttonArray[x], gameStartTime + noteTimes[index++])
+                                    val waitTime = buttonToClick[g]!!.time - System.currentTimeMillis()
+                                    runOnUiThread { r.text = waitTime.toString() }
+                                    if (System.currentTimeMillis() >= buttonToClick[g]!!.time) {
+                                        buttonClickedCheck(buttonToClick, g)
                                     }
                                 }
-                        }
+                        Thread.sleep(5)
                     }
                 }
-            if (index == noteTimes!!.size) {
-                gameIsRunning = false
-            }
-
         }
         runOnUiThread { endGame() }
     }
 
     private fun buttonClickedCheck(buttonToClick: Array<ScoreTracker?>, i: Int) {
-        val score = Thread(Runnable {
             runOnUiThread { buttonToClick[i]!!.button!!.visibility = View.VISIBLE }
             val startTime = System.currentTimeMillis()
             while (System.currentTimeMillis() <= startTime + REVEAL_TIME) {
@@ -146,23 +150,23 @@ class GameActivity : AppCompatActivity() {
                     break
                 }
             }
-            runOnUiThread { buttonToClick[i]!!.button!!.visibility = View.INVISIBLE }
-        })
-        score.start()
+        runOnUiThread { buttonToClick[i]!!.button!!.visibility = View.INVISIBLE }
     }
 
     private fun endGame() {
+        Thread.sleep(300)
         val gameOver = Intent(this, GameOver::class.java)
         gameOver.putExtra("finalScore", score)
         startActivity(gameOver)
         finish()
     }
 
-    private fun genInt(gen: Random, arr: IntArray): Int {
+    private fun genInt(arr: IntArray): Int {
+        val gen = Random()
         val x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
         for (i in arr.indices) {
             if (x == arr[i]) {
-                return genInt(gen, arr)
+                return genInt(arr)
             }
         }
         return x

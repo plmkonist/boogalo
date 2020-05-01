@@ -19,7 +19,7 @@ class GameActivity : AppCompatActivity() {
     private var score = 0
     //private var gameStartTime: Long = 0
     //private var noteTimes: ArrayList<Long>? = null
-    private val REVEAL_TIME = 1500L
+    private val REVEAL_TIME = 1675L
     private var song2: MediaPlayer? = null
     //private boolean[] correctButtonClicked;
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,13 +74,13 @@ class GameActivity : AppCompatActivity() {
     private fun setUpButtonToClick(difficultyConstant: Int): Array<ScoreTracker?> {
         return when (difficultyConstant) {
             0 -> {
-                arrayOfNulls<ScoreTracker?>(1)
+                arrayOfNulls<ScoreTracker?>(2)
             }
             1 -> {
-                arrayOfNulls(2)
+                arrayOfNulls(3)
             }
             else -> {
-                arrayOfNulls(3)
+                arrayOfNulls(4)
             }
         }
     }
@@ -123,21 +123,24 @@ class GameActivity : AppCompatActivity() {
         while (gameIsRunning) {
                 for (g in buttonToClick.indices) {
                     if (buttonToClick[g]!!.clicked || buttonToClick[g]!!.time + REVEAL_TIME <= System.currentTimeMillis()) {
-                                GlobalScope.launch(Dispatchers.Default) {
-                                    val x = genInt(randomButtonLocations);
-                                    randomButtonLocations[g] = x;
-                                    //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
-                                    //gen = Random(x.toLong())
+                        if (index < noteTimes.size) {
+                            GlobalScope.launch(Dispatchers.Default) {
+                                val x = genInt(randomButtonLocations);
+                                randomButtonLocations[g] = x;
                                     buttonToClick[g]?.reset(buttonArray[x], gameStartTime + noteTimes[index++])
-                                    val waitTime = buttonToClick[g]!!.time - System.currentTimeMillis()
-                                    runOnUiThread { r.text = waitTime.toString() }
-                                    if (System.currentTimeMillis() >= buttonToClick[g]!!.time) {
-                                        buttonClickedCheck(buttonToClick, g)
-                                    }
+
+                                val waitTime = buttonToClick[g]!!.time - System.currentTimeMillis()
+                                if (System.currentTimeMillis() < buttonToClick[g]!!.time) {
+                                    sleep(waitTime)
                                 }
-                        Thread.sleep(5)
+                                buttonClickedCheck(buttonToClick, g)
+                            }
+                        }
+                        Thread.sleep(25)
                     }
                 }
+            if (index >= noteTimes.size)
+                gameIsRunning = false
         }
         runOnUiThread { endGame() }
     }
@@ -145,16 +148,17 @@ class GameActivity : AppCompatActivity() {
     private fun buttonClickedCheck(buttonToClick: Array<ScoreTracker?>, i: Int) {
             runOnUiThread { buttonToClick[i]!!.button!!.visibility = View.VISIBLE }
             val startTime = System.currentTimeMillis()
-            while (System.currentTimeMillis() <= startTime + REVEAL_TIME) {
+            while (System.currentTimeMillis() <= startTime + REVEAL_TIME - 100) {
                 if (buttonToClick[i]!!.clicked) {
                     break
                 }
             }
         runOnUiThread { buttonToClick[i]!!.button!!.visibility = View.INVISIBLE }
+        Thread.sleep(250)
     }
 
     private fun endGame() {
-        Thread.sleep(300)
+        Thread.sleep(1000 + intent.getIntExtra("difficulty", 1) * 450L)
         val gameOver = Intent(this, GameOver::class.java)
         gameOver.putExtra("finalScore", score)
         startActivity(gameOver)

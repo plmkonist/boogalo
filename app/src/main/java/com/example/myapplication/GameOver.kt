@@ -16,6 +16,9 @@ class GameOver : AppCompatActivity() {
         finals.text = score.toString()
         val playAgain = findViewById<Button>(R.id.playAgain)
         val main = Intent(this, Main2Activity::class.java)
-        playAgain.setOnClickListener { startActivity(main) }
+        playAgain.setOnClickListener {
+            startActivity(main)
+            finish()
+        }
     }
 }

@@ -4,17 +4,18 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
+import java.lang.Thread.sleep
 import java.util.*
 
 
 class GameActivity : AppCompatActivity() {
-    private val ROW_SIZE = 4
-    private val  COLUMN_SIZE = 4
+    private val ROW_SIZE = 5
+    private val  COLUMN_SIZE = 5
     private var score = 0
     private var gameStartTime: Long = 0
     private var noteTimes: ArrayList<Long>? = null
@@ -24,7 +25,7 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        val time = System.currentTimeMillis()
+        //val time = System.currentTimeMillis()
         val song = SongConstants.songArray[intent.getIntExtra("song",0)]
         noteTimes = song.noteTimes
         setupUI(song)
@@ -35,7 +36,7 @@ class GameActivity : AppCompatActivity() {
         val scoreText = findViewById<TextView>(R.id.sdf)
         scoreText.text = "Current song " + song.name
         val difficultyConst = intent.getIntExtra("difficulty", 1)
-        val buttonArray: Array<ImageButton?> = arrayOfNulls(ROW_SIZE * COLUMN_SIZE)
+        val buttonArray: Array<Button?> = arrayOfNulls(ROW_SIZE * COLUMN_SIZE)
         val buttonToClick: Array<ScoreTracker?> = setUpButtonToClick(difficultyConst)
         for (i in 0 until COLUMN_SIZE) {
             val gameBtnRow: View = layoutInflater.inflate(
@@ -48,7 +49,7 @@ class GameActivity : AppCompatActivity() {
                     R.layout.game_btn_chunk,
                     gameRow, false
                 )
-                val gameButton = gameBtns.findViewById<ImageButton>(R.id.gameButton)
+                val gameButton = gameBtns.findViewById<Button>(R.id.gameButton)
                 buttonArray[i * ROW_SIZE + j] = gameButton
                 //revealArray[(i * ROW_SIZE) + j] = new ButtonFadeThread(gameButton);
                 gameButton.setOnClickListener {
@@ -84,7 +85,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun startGame(buttonArray: Array<ImageButton?>, buttonToClick: Array<ScoreTracker?>, song: Song) {
+    private fun startGame(buttonArray: Array<Button?>, buttonToClick: Array<ScoreTracker?>, song: Song) {
         var gameIsRunning = true
         var gen = Random()
         val randomButtonLocations = IntArray(buttonToClick.size)
@@ -109,30 +110,22 @@ class GameActivity : AppCompatActivity() {
         while (gameIsRunning) {
             runBlocking {
                 for (g in buttonToClick.indices) {
-                    if (buttonToClick[g]!!.clicked) {
-                        continue
-                    }
-                    launch(Dispatchers.Default) {
                         val coIndex = g
-                            if (buttonToClick[coIndex]!!.clicked || buttonToClick[i]!!.time + REVEAL_TIME <= System.currentTimeMillis()) {
-                                x = genInt(gen, randomButtonLocations);
-                                randomButtonLocations[index] = x;
-                                //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
-                                gen = Random(x.toLong())
-                                buttonToClick[coIndex]?.reset(buttonArray[x], gameStartTime + noteTimes!![index++])
-                                if (System.currentTimeMillis() <= buttonToClick[coIndex]!!.time) {
-                                    launch {
+                            if (buttonToClick[coIndex]!!.clicked || buttonToClick[i]?.time + REVEAL_TIME <= System.currentTimeMillis()) {
+                                launch {
+                                    x = genInt(gen, randomButtonLocations);
+                                    randomButtonLocations[index] = x;
+                                    //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
+                                    //gen = Random(x.toLong())
+                                    buttonToClick[coIndex]?.reset(buttonArray[x], gameStartTime + noteTimes!![index++])
+                                    if (System.currentTimeMillis() <= buttonToClick[coIndex]!!.time) {
                                         try {
-                                            Thread.sleep(
-                                                buttonToClick[g]!!.time - System.currentTimeMillis()
-                                            )
                                             buttonClickedCheck(buttonToClick, coIndex)
                                         } catch (e: java.lang.Exception) {
                                             buttonClickedCheck(buttonToClick, coIndex)
                                         }
                                     }
                                 }
-                            }
                         }
                     }
                 }

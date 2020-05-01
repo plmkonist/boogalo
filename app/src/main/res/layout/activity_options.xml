@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/optionsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#161038"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/songPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_a_song_current_song_selected_is"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#DB8888" />
+
+    <TextView
+        android:id="@+id/songTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#161038"
+        android:gravity="center"
+        android:text="@string/error"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="#B80707" />
+
+    <LinearLayout
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#D18383"
+        android:text="@string/select_this_song"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="#009688" />
+
+</LinearLayout>

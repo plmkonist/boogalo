@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#161038"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/EasyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#E48181"
+        android:text="@string/easy"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/MediumButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/holo_red_light"
+        android:text="@string/medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/HardButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#6B0000"
+        android:text="@string/hard"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@android:color/white" />
+</LinearLayout>

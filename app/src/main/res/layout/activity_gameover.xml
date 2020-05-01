@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gameOverLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#161038"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/gameOver"
+        android:layout_width="match_parent"
+        android:layout_height="173dp"
+        android:text="Game Over! Your score:"
+        android:textColor="@android:color/holo_red_light"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:text="asdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+        android:textColor="@android:color/holo_green_dark" />
+
+    <Button
+        android:id="@+id/playAgain"
+        android:layout_width="match_parent"
+        android:layout_height="171dp"
+        android:background="@android:color/holo_red_light"
+        android:textColor="#ffffff"
+        android:text="New Game"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+</LinearLayout>

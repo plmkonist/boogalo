@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rowsAndColumns"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#161038"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sdf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+
+    <Button
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</LinearLayout>

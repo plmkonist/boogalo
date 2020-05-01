@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Boogaloo4: A new hope</string>
+    <string name="action_settings">Settings</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="error">error</string>
+    <string name="select_this_song">SELECT THIS SONG</string>
+    <string name="choose_a_song_current_song_selected_is">Choose a song! Current song selected is:</string>
+</resources>

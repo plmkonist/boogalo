@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import com.example.myapplication.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -16,20 +15,19 @@ class OptionsActivity : AppCompatActivity() {
         var songSelected = findViewById<TextView>(R.id.songTitle)
         songSelected.text = SongConstants.songArray[intent.getIntExtra("song",0)].name
         val songList = findViewById<LinearLayout>(R.id.test)
-        val songArr: Array<Song> = SongConstants.songArray
         val back = Intent(this, DifficultyActivity::class.java)
-        for (i in songArr.indices) {
+        for (i in 1 until SongConstants.songArray.size) {
             val songsLayout: View = layoutInflater.inflate(
                 R.layout.chunk_song,
                 songList, false
             )
-            val songSelectBTN =
+            var songSelectBTN =
                 songsLayout.findViewById<Button>(R.id.chooseSongButton)
-            songSelectBTN.setText(songArr[i].name)
+            songSelectBTN.text = SongConstants.songArray[i].name
             songSelectBTN.setOnClickListener {
                 back.removeExtra("song")
                 back.putExtra("song", i)
-                songSelected.setText(songArr[i].name)
+                songSelected.text = SongConstants.songArray[i].name
             }
             songList.addView(songsLayout)
         }

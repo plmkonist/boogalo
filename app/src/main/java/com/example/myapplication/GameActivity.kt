@@ -8,7 +8,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.R
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -102,32 +101,45 @@ class GameActivity : AppCompatActivity() {
             randomButtonLocations[i] = x
             i++
         }
-        song2 = MediaPlayer.create(this@GameActivity, song.iD)
-        song2?.start()
+        runOnUiThread {
+            song2 = MediaPlayer.create(this@GameActivity, song.iD)
+            song2?.start()
+        }
         gameStartTime = System.currentTimeMillis()
         while (gameIsRunning) {
             runBlocking {
                 for (g in buttonToClick.indices) {
+                    if (buttonToClick[g]!!.clicked) {
+                        continue
+                    }
                     launch(Dispatchers.Default) {
                         val coIndex = g
-                        if (buttonToClick[coIndex]!!.clicked || buttonToClick[i]!!.time + REVEAL_TIME <= System.currentTimeMillis()) {
-                            x = genInt(gen, randomButtonLocations);
-                            randomButtonLocations[index] = x;
-                            //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
-                            gen = Random(x.toLong())
-                            buttonToClick[coIndex]?.reset(buttonArray[x], gameStartTime + noteTimes!![index++])
-                            if (System.currentTimeMillis() <= buttonToClick[coIndex]!!.time) {
-                                launch {
-                                buttonClickedCheck(buttonToClick, coIndex)
+                            if (buttonToClick[coIndex]!!.clicked || buttonToClick[i]!!.time + REVEAL_TIME <= System.currentTimeMillis()) {
+                                x = genInt(gen, randomButtonLocations);
+                                randomButtonLocations[index] = x;
+                                //x = gen.nextInt(ROW_SIZE * COLUMN_SIZE)
+                                gen = Random(x.toLong())
+                                buttonToClick[coIndex]?.reset(buttonArray[x], gameStartTime + noteTimes!![index++])
+                                if (System.currentTimeMillis() <= buttonToClick[coIndex]!!.time) {
+                                    launch {
+                                        try {
+                                            Thread.sleep(
+                                                buttonToClick[g]!!.time - System.currentTimeMillis()
+                                            )
+                                            buttonClickedCheck(buttonToClick, coIndex)
+                                        } catch (e: java.lang.Exception) {
+                                            buttonClickedCheck(buttonToClick, coIndex)
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
                     }
                 }
             if (index == noteTimes!!.size) {
                 gameIsRunning = false
             }
+
         }
         runOnUiThread { endGame() }
     }
@@ -164,7 +176,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         song2?.stop()
+        super.onDestroy()
     }
 }

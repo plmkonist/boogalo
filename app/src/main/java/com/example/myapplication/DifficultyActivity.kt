@@ -14,6 +14,7 @@ class DifficultyActivity : AppCompatActivity() {
         val mediumButton = findViewById<Button>(R.id.MediumButton)
         val easyButton = findViewById<Button>(R.id.EasyButton)
         val gameIntent = Intent(this, GameActivity::class.java)
+        gameIntent.putExtra("song", intent.getIntExtra("song", 0))
         hardButton.setOnClickListener {
             gameIntent.putExtra("difficulty", 2)
             startActivity(gameIntent)

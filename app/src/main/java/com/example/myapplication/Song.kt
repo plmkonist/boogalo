@@ -13,6 +13,7 @@ class Song internal constructor(val name: String, val iD: Int, beats: String) {
                 noteTimes.add(java.lang.Long.valueOf(arr[i]))
             }
         } catch (e: Exception) {
+            print("hello")
         }
     }
 

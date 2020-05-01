@@ -17,7 +17,7 @@ class Main2Activity : AppCompatActivity() {
         val opAct = Intent(this, OptionsActivity::class.java)
         val diffAct = Intent(this, DifficultyActivity::class.java)
         diffAct.putExtra("song", 0)
-        gameButton.setOnClickListener { startActivity(opAct) }
-        songButton.setOnClickListener {startActivity(diffAct)}
+        songButton.setOnClickListener { startActivity(opAct) }
+        gameButton.setOnClickListener {startActivity(diffAct)}
     }
 }

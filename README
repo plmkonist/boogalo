@@ -15,5 +15,6 @@ The most difficult part was using coroutines. Each button that appears and disap
 but UI can only be changed on the main thread, so when there are lot's of UI updates, the game might lag a little and I believe this is when a button is supposed to disappear from the screen but doesnt
 In the future to avoid this problem, I will use a different library rather than buttons for the clickable objects.
 
-
+I learned a lot about coroutines and synchronization through this project. For example, I learned I had to put a sleep method call in my main thread once the game was won so all the other 
+existing threads could be destroyed properly
 

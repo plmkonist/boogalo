@@ -1,5 +1,8 @@
 This is a rhythm game. You choose a song and a difficulty and coroutines manage different components while you tap buttons to the beat.
 
+[info]!
+(demo/IMG_3263 (1).gif)
+
 Currently the timing for when the buttons should pop up is hard coded in and only for 1 song. At times there are some issues whereby a clickable button is supposed to disappear but doesnt.
 
 Upon launching the app, you are put into the Main Activity that has 2 buttons. 1 button leads to a song selections activity, and the other leads to the difficulty selection.

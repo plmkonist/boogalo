@@ -1,6 +1,6 @@
 This is a rhythm game. You choose a song and a difficulty and coroutines manage different components while you tap buttons to the beat.
 
-![Demo video](https://www.youtube.com/watch?v=6u58QtHb1C0&feature=youtu.be)
+[Demo video](https://www.youtube.com/watch?v=6u58QtHb1C0&feature=youtu.be)
 
 Currently the timing for when the buttons should pop up is hard coded in and only for 1 song. At times there are some issues whereby a clickable button is supposed to disappear but doesnt.
 
